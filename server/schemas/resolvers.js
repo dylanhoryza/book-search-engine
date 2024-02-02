@@ -1,8 +1,8 @@
 // import user model
 const { User } = require('../models');
 // import sign token function from auth
-const { signToken } = require('../utils/auth');
-const { AuthenticationError } = require('apollo-server-express');
+const { signToken, AuthenticationError } = require('../utils/auth');
+
 
 
 const resolvers = {
@@ -46,12 +46,12 @@ const resolvers = {
       return { token, user };
     },
 
-    saveBook: async (_, { input }, context) => {
+    saveBook: async (_, { book }, context) => {
       // Ensure the user is logged in
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: input } },
+          { $addToSet: { savedBooks: book } },
           { new: true, runValidators: true }
         );
         return updatedUser;
